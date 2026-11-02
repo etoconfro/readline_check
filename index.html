@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Readline</title>
+<meta name="description" content="Readline — суфлёр для видео">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Readline">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/favicon-32.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Значки в духе SF Symbols: один стиль, линии одной толщины -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="13" rx="2.6"/><path d="M5.5 5h13M8 2.2h8"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8z"/><path d="M10.3 2.8h3.4l.5 2.4 1.7.9 2.3-.9 1.7 2.9-1.8 1.7v1.9l1.8 1.7-1.7 2.9-2.3-.9-1.7 1-.5 2.4h-3.4l-.5-2.4-1.7-1-2.3.9-1.7-2.9 1.8-1.7v-1.9L4.1 8.1l1.7-2.9 2.3.9 1.7-.9z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4.5v15M4.5 12h15"/></symbol>
+    <symbol id="i-compose" viewBox="0 0 24 24"><path d="M11 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V13"/><path d="M17.6 3.6a1.9 1.9 0 0 1 2.8 2.8L12 14.8l-3.6.8.8-3.6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4L20.5 20.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 4.5L7.5 12l7.5 7.5"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9.5 5.5L16 12l-6.5 6.5"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7.5 4.8v14.4a.8.8 0 0 0 1.2.7l11.4-7.2a.8.8 0 0 0 0-1.4L8.7 4.1a.8.8 0 0 0-1.2.7z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1.2" fill="currentColor" stroke="none"/><rect x="14" y="4.5" width="4" height="15" rx="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-words" viewBox="0 0 24 24"><path d="M3 7h6M3 12h4M13 7h8M11 12h10M3 17h18"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-metronome" viewBox="0 0 24 24"><path d="M9.5 3h5l4 18h-13z"/><path d="M12 16l5-9"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 16a8.5 8.5 0 1 1 17 0"/><path d="M12 16l-3.5-5"/><circle cx="12" cy="16" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 11v2M7 8v8M11 4v16M15 7v10M19 10v4"/></symbol>
+    <symbol id="i-follow" viewBox="0 0 24 24"><path d="M3 8V5.5A2.5 2.5 0 0 1 5.5 3H8M16 3h2.5A2.5 2.5 0 0 1 21 5.5V8M21 16v2.5a2.5 2.5 0 0 1-2.5 2.5H16M8 21H5.5A2.5 2.5 0 0 1 3 18.5V16"/><path d="M7.5 9.5h9M7.5 14.5h6"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+    <symbol id="i-camflip" viewBox="0 0 24 24"><path d="M3 9.5A2.5 2.5 0 0 1 5.5 7h2l1.5-2.2h6L16.5 7h2A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><path d="M8.6 12.5a3.6 3.6 0 0 1 6.3-1.6M15.4 14.5a3.6 3.6 0 0 1-6.3 1.6M15.2 9.4v1.8h-1.8M8.8 17.6v-1.8h1.8"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M6 5v14"/><path d="M19 5.5v13a.7.7 0 0 1-1.1.6L9 12.6a.7.7 0 0 1 0-1.2l8.9-6.5a.7.7 0 0 1 1.1.6z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-mirror" viewBox="0 0 24 24"><path d="M12 3v18" stroke-dasharray="2 2.4"/><path d="M9 7L3.5 17H9zM15 7l5.5 10H15z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M4.5 9v9.5A1.5 1.5 0 0 0 6 20h12a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 14.5V3M8 6.8L12 3l4 3.8"/><path d="M8.5 10H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1.5"/></symbol>
+    <symbol id="i-import" viewBox="0 0 24 24"><path d="M12 3v11.5M8 10.7l4 3.8 4-3.8"/><path d="M8.5 10H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1.5"/></symbol>
+    <symbol id="i-textsize" viewBox="0 0 24 24"><path d="M3 19L8.5 5h1L15 19M5.2 14h7.6M15.5 19l3-7.5h.5l3 7.5M16.6 16.5h4.3"/></symbol>
+    <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M12 3v18M8 6.5L12 3l4 3.5M8 17.5l4 3.5 4-3.5"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="2.5" y="6" width="13.5" height="12" rx="2.5"/><path d="M16 10.5l5.5-3.3v9.6L16 13.5"/></symbol>
+    <symbol id="i-appearance" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="3"/><path d="M10 18.5h4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16M9.5 6.5V4.5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6 6.5l1 13a1.5 1.5 0 0 0 1.5 1.4h7a1.5 1.5 0 0 0 1.5-1.4l1-13M10 10.5v6.5M14 10.5v6.5"/></symbol>
+    <symbol id="i-paste" viewBox="0 0 24 24"><rect x="5" y="4.5" width="14" height="17" rx="2.5"/><path d="M9 4.5V3.8A1 1 0 0 1 10 2.8h4a1 1 0 0 1 1 1v.7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M9 11h6M9 15h4"/></symbol>
+    <symbol id="i-docplus" viewBox="0 0 24 24"><path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M13.5 3v5.5H19M12 11.5v6M9 14.5h6"/></symbol>
+    <symbol id="i-videofill" viewBox="0 0 24 24"><rect x="2.5" y="6" width="13.5" height="12" rx="2.5" fill="currentColor"/><path d="M16 10.5l5.5-3.3v9.6L16 13.5z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ Главный экран ============ -->
+<div id="home" class="screen">
+  <div class="navbar" id="home-nav">
+    <button class="glass circle" id="btn-recordings" aria-label="Записи"><svg><use href="#i-film"/></svg></button>
+    <span class="nav-title" id="home-nav-title">Readline</span>
+    <div class="glass pill-group">
+      <button id="btn-settings" aria-label="Настройки"><svg><use href="#i-gear"/></svg></button>
+      <button id="btn-add" aria-label="Добавить"><svg><use href="#i-plus"/></svg></button>
+    </div>
+  </div>
+
+  <div class="scroll" id="home-scroll">
+    <div class="top-glow"></div>
+    <h1 class="large-title">Readline</h1>
+    <div id="library">
+      <div class="lib-header">
+        <div class="lib-greeting" id="lib-greeting"></div>
+        <div class="lib-summary" id="lib-summary"></div>
+      </div>
+      <div id="script-list" class="cards"></div>
+      <p id="search-empty" class="search-empty hidden">Ничего не найдено</p>
+    </div>
+
+    <div id="empty" class="empty hidden">
+      <div class="illus">
+        <div class="page p1"></div><div class="page p2"></div>
+        <div class="page p3"><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i></div>
+        <div class="illus-cam"><svg><use href="#i-videofill"/></svg></div>
+      </div>
+      <h2>Здесь будут ваши сценарии</h2>
+      <p>Напишите или вставьте текст — суфлёр покажет его над камерой, а вы просто смотрите в объектив.</p>
+      <div class="empty-actions">
+        <button class="primary-btn" id="btn-create-first"><svg><use href="#i-compose"/></svg>Создать первый сценарий</button>
+        <div class="row2">
+          <button class="fill-btn" id="btn-paste"><svg><use href="#i-paste"/></svg>Вставить из буфера</button>
+          <button class="fill-btn" id="btn-import-file"><svg><use href="#i-docplus"/></svg>Импорт из файла</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar" id="home-bottom">
+    <label class="glass search-pill">
+      <svg><use href="#i-search"/></svg>
+      <input id="search" type="search" placeholder="Название или текст" autocomplete="off" enterkeyhint="search">
+    </label>
+    <button class="glass circle big" id="btn-new" aria-label="Новый сценарий"><svg><use href="#i-compose"/></svg></button>
+  </div>
+  <input type="file" id="file-text" accept=".txt,.md,text/plain,text/markdown" hidden>
+</div>
+
+<!-- ============ Редактор ============ -->
+<div id="editor" class="screen pushed">
+  <div class="navbar">
+    <button class="glass circle" id="ed-back" aria-label="Назад"><svg><use href="#i-back"/></svg></button>
+    <span class="nav-title" id="ed-nav-title"></span>
+    <button class="glass circle" id="ed-more" aria-label="Ещё"><svg><use href="#i-more"/></svg></button>
+  </div>
+  <div class="scroll" id="ed-scroll">
+    <textarea id="ed-title" class="ed-title" rows="1" placeholder="Название"></textarea>
+    <div class="ed-stats">
+      <div class="ed-stat-row">
+        <span><svg><use href="#i-words"/></svg><b id="st-words"></b></span>
+        <span><svg><use href="#i-clock"/></svg><b id="st-time"></b></span>
+        <span><svg><use href="#i-metronome"/></svg><b>130 сл/мин</b></span>
+      </div>
+      <div class="ed-progress"><div class="track"><div class="bar" id="st-bar"></div></div><span id="st-limit"></span></div>
+    </div>
+    <textarea id="ed-text" class="ed-text" placeholder="Начните писать или вставьте текст…"></textarea>
+  </div>
+  <div class="bottom-bar ed-bar">
+    <span class="spacer"></span>
+    <button class="prominent light" id="ed-prompter"><svg><use href="#i-play"/></svg>Суфлёр</button>
+    <button class="prominent red" id="ed-record"><i class="dot"></i>Записать</button>
+  </div>
+</div>
+
+<!-- ============ Съёмка / суфлёр ============ -->
+<div id="rec" class="screen pushed dark-ui">
+  <video id="cam" playsinline muted autoplay></video>
+  <div id="rec-shade"></div>
+  <div id="pr-viewport"><div id="pr-text"></div></div>
+  <div id="pr-handle" aria-label="Высота текста"></div>
+  <div id="pr-countdown" class="hidden"></div>
+
+  <div class="navbar rec-nav">
+    <button class="glass circle" id="rec-back" aria-label="Назад"><svg><use href="#i-back"/></svg></button>
+    <div class="glass title-pill" id="title-pill"><span id="tp-text"></span></div>
+    <button class="glass circle" id="rec-more" aria-label="Ещё"><svg><use href="#i-more"/></svg></button>
+  </div>
+
+  <div class="rec-bottom">
+    <p class="rec-banner hidden" id="rec-banner"></p>
+    <div class="chips">
+      <button class="glass chip" id="chip-mode"><svg id="chip-mode-icon"><use href="#i-gauge"/></svg><span id="chip-mode-text">Ручной</span></button>
+      <button class="glass chip" id="chip-speed"><svg><use href="#i-gauge"/></svg><span id="chip-speed-text">60</span></button>
+      <button class="glass chip" id="chip-size"><span id="chip-size-text">Aa 40</span></button>
+    </div>
+    <div class="dock">
+      <div class="dock-side">
+        <button class="glass circle dock-btn" id="dock-left"><svg id="dock-left-icon"><use href="#i-play"/></svg></button>
+        <span id="dock-left-label">Текст</span>
+      </div>
+      <div class="dock-center">
+        <button id="rec-btn" aria-label="Запись"><i></i></button>
+        <button id="play-btn" class="hidden" aria-label="Старт"><svg id="play-btn-icon"><use href="#i-play"/></svg></button>
+        <span id="rec-label">Запись</span>
+      </div>
+      <div class="dock-side">
+        <button class="glass circle dock-btn" id="dock-right"><svg id="dock-right-icon"><use href="#i-camflip"/></svg></button>
+        <span id="dock-right-label">Камера</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Просмотр дубля ============ -->
+<div id="player" class="screen pushed dark-ui">
+  <video id="pl-video" playsinline></video>
+  <div class="navbar">
+    <button class="glass circle" id="pl-back" aria-label="Назад"><svg><use href="#i-back"/></svg></button>
+    <div class="glass title-pill"><span id="pl-title"></span></div>
+    <button class="glass circle" id="pl-delete" aria-label="Удалить"><svg><use href="#i-trash"/></svg></button>
+  </div>
+  <div class="pl-bottom">
+    <div class="pl-scrub"><span id="pl-cur">0:00</span><input type="range" id="pl-seek" min="0" max="1000" value="0"><span id="pl-dur">0:00</span></div>
+    <div class="pl-actions">
+      <button class="glass circle dock-btn" id="pl-play"><svg id="pl-play-icon"><use href="#i-pause"/></svg></button>
+      <button class="prominent light wide" id="pl-share"><svg><use href="#i-share"/></svg>Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Шторки ============ -->
+<div id="scrim"></div>
+
+<section class="sheet" id="sheet-recordings">
+  <div class="grabber"></div>
+  <div class="sheet-nav">
+    <button class="glass circle" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
+    <span class="nav-title">Записи</span>
+    <span class="nav-spacer"></span>
+  </div>
+  <div class="sheet-scroll">
+    <h1 class="large-title">Записи</h1>
+    <p class="lib-summary pad" id="rec-summary"></p>
+    <div id="rec-grid"></div>
+    <div id="rec-empty" class="empty small hidden">
+      <div class="empty-icon"><svg><use href="#i-film"/></svg></div>
+      <h2>Записей пока нет</h2>
+      <p>Откройте сценарий и нажмите «Записать». Готовые дубли появятся здесь.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sheet" id="sheet-settings">
+  <div class="grabber"></div>
+  <div class="sheet-pages">
+    <!-- главная страница настроек -->
+    <div class="sheet-page" id="sp-home">
+      <div class="sheet-nav">
+        <button class="glass circle" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
+        <span class="nav-title">Настройки</span>
+        <span class="nav-spacer"></span>
+      </div>
+      <div class="sheet-scroll">
+        <h1 class="large-title">Настройки</h1>
+        <div class="groups">
+          <div class="group">
+            <p class="group-title">Данные</p>
+            <div class="card">
+              <button class="srow" id="btn-export"><svg><use href="#i-archive"/></svg><span class="srow-text"><span>Резервная копия</span><small id="backup-sub">Файл со всеми сценариями</small></span><svg class="acc"><use href="#i-share"/></svg></button>
+              <div class="sdiv"></div>
+              <button class="srow" id="btn-import"><svg><use href="#i-import"/></svg><span class="srow-text"><span>Восстановить из копии</span></span></button>
+            </div>
+            <p class="group-foot">Сценарии и видео хранятся только в этом браузере на этом iPhone.</p>
+          </div>
+          <div class="group">
+            <p class="group-title">Суфлёр</p>
+            <div class="card">
+              <button class="srow" data-page="sp-text"><svg><use href="#i-textsize"/></svg><span class="srow-text"><span>Текст</span></span><svg class="acc"><use href="#i-chev"/></svg></button>
+              <div class="sdiv"></div>
+              <button class="srow" data-page="sp-scroll"><svg><use href="#i-scroll"/></svg><span class="srow-text"><span>Прокрутка</span></span><svg class="acc"><use href="#i-chev"/></svg></button>
+              <div class="sdiv"></div>
+              <button class="srow" data-page="sp-video"><svg><use href="#i-video"/></svg><span class="srow-text"><span>Видео</span></span><svg class="acc"><use href="#i-chev"/></svg></button>
+            </div>
+          </div>
+          <div class="group">
+            <p class="group-title">Общие</p>
+            <div class="card">
+              <button class="srow" data-page="sp-theme"><svg><use href="#i-appearance"/></svg><span class="srow-text"><span>Оформление</span></span><span class="srow-val" id="theme-val"></span><svg class="acc"><use href="#i-chev"/></svg></button>
+            </div>
+          </div>
+          <div class="group">
+            <p class="group-title">Приложение</p>
+            <div class="card">
+              <button class="srow" data-page="sp-install"><svg><use href="#i-home"/></svg><span class="srow-text"><span>Установка на экран «Домой»</span></span><svg class="acc"><use href="#i-chev"/></svg></button>
+              <div class="sdiv"></div>
+              <div class="srow"><svg><use href="#i-info"/></svg><span class="srow-text"><span>Версия</span></span><span class="srow-val" id="v-version"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Текст -->
+    <div class="sheet-page sub" id="sp-text">
+      <div class="sheet-nav"><button class="glass circle" data-back aria-label="Назад"><svg><use href="#i-back"/></svg></button><span class="nav-title show">Текст</span><span class="nav-spacer"></span></div>
+      <div class="sheet-scroll"><div class="groups">
+        <div class="group"><div class="card pad">
+          <div class="slider-row"><span>Размер текста</span><b id="v-font"></b></div>
+          <input type="range" class="ios-range" id="s-font" min="20" max="96" step="1">
+          <div class="sdiv full"></div>
+          <div class="slider-row"><span>Высота области текста</span><b id="v-area"></b></div>
+          <input type="range" class="ios-range" id="s-area" min="25" max="100" step="5">
+        </div><p class="group-foot">Размер также меняется щипком двумя пальцами прямо на экране записи.</p></div>
+        <div class="group"><div class="card">
+          <label class="srow"><svg><use href="#i-mirror"/></svg><span class="srow-text"><span>Зеркальный текст</span></span><input type="checkbox" class="switch" id="s-mirror"></label>
+        </div><p class="group-foot">Нужен, если телефон стоит в суфлёрной приставке со стеклом.</p></div>
+      </div></div>
+    </div>
+
+    <!-- Прокрутка -->
+    <div class="sheet-page sub" id="sp-scroll">
+      <div class="sheet-nav"><button class="glass circle" data-back aria-label="Назад"><svg><use href="#i-back"/></svg></button><span class="nav-title show">Прокрутка</span><span class="nav-spacer"></span></div>
+      <div class="sheet-scroll"><div class="groups">
+        <div class="group"><p class="group-title">Режим</p><div class="card">
+          <button class="srow" data-mode="manual"><svg><use href="#i-gauge"/></svg><span class="srow-text"><span>Ручной</span><small>Текст едет с постоянной скоростью</small></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv"></div>
+          <button class="srow" data-mode="voice"><svg><use href="#i-wave"/></svg><span class="srow-text"><span>Голос</span><small>Едет, пока вы говорите</small></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv"></div>
+          <button class="srow" data-mode="follow"><svg><use href="#i-follow"/></svg><span class="srow-text"><span>Слежение</span><small>Следует за словами, которые вы читаете</small></span><svg class="acc check"><use href="#i-check"/></svg></button>
+        </div></div>
+        <div class="group"><div class="card pad">
+          <div class="slider-row"><span>Скорость</span><b id="v-speed"></b></div>
+          <input type="range" class="ios-range" id="s-speed" min="10" max="200" step="5">
+          <div class="sdiv full"></div>
+          <div class="slider-row"><span>Чувствительность к голосу</span><b id="v-sens"></b></div>
+          <input type="range" class="ios-range" id="s-sens" min="0" max="100" step="5">
+        </div></div>
+        <div class="group"><div class="card">
+          <div class="srow"><svg><use href="#i-words"/></svg><span class="srow-text"><span>Язык речи</span></span>
+            <div class="segmented" id="seg-lang"><button data-v="ru-RU">Русский</button><button data-v="en-US">English</button></div></div>
+          <div class="sdiv"></div>
+          <div class="srow"><svg><use href="#i-clock"/></svg><span class="srow-text"><span>Отсчёт</span></span>
+            <div class="segmented" id="seg-countdown"><button data-v="0">Нет</button><button data-v="3">3 с</button><button data-v="5">5 с</button></div></div>
+        </div><p class="group-foot">«Слежение» в Safari использует распознавание речи Apple: нужен интернет и включённая диктовка.</p></div>
+      </div></div>
+    </div>
+
+    <!-- Видео -->
+    <div class="sheet-page sub" id="sp-video">
+      <div class="sheet-nav"><button class="glass circle" data-back aria-label="Назад"><svg><use href="#i-back"/></svg></button><span class="nav-title show">Видео</span><span class="nav-spacer"></span></div>
+      <div class="sheet-scroll"><div class="groups">
+        <div class="group"><p class="group-title">Качество</p><div class="card" id="res-list">
+          <button class="srow" data-res="720"><span class="srow-text"><span>720p</span></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv flush"></div>
+          <button class="srow" data-res="1080"><span class="srow-text"><span>1080p HD</span></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv flush"></div>
+          <button class="srow" data-res="2160"><span class="srow-text"><span>4K</span></span><svg class="acc check"><use href="#i-check"/></svg></button>
+        </div><p class="group-foot">Браузер может снять в меньшем качестве, если камера не поддерживает выбранное.</p></div>
+      </div></div>
+    </div>
+
+    <!-- Оформление -->
+    <div class="sheet-page sub" id="sp-theme">
+      <div class="sheet-nav"><button class="glass circle" data-back aria-label="Назад"><svg><use href="#i-back"/></svg></button><span class="nav-title show">Оформление</span><span class="nav-spacer"></span></div>
+      <div class="sheet-scroll"><div class="groups">
+        <div class="group"><div class="card" id="theme-list">
+          <button class="srow" data-theme="auto"><span class="srow-text"><span>Авто</span><small>Как на iPhone</small></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv flush"></div>
+          <button class="srow" data-theme="light"><span class="srow-text"><span>Светлая</span></span><svg class="acc check"><use href="#i-check"/></svg></button>
+          <div class="sdiv flush"></div>
+          <button class="srow" data-theme="dark"><span class="srow-text"><span>Тёмная</span></span><svg class="acc check"><use href="#i-check"/></svg></button>
+        </div></div>
+      </div></div>
+    </div>
+
+    <!-- Установка -->
+    <div class="sheet-page sub" id="sp-install">
+      <div class="sheet-nav"><button class="glass circle" data-back aria-label="Назад"><svg><use href="#i-back"/></svg></button><span class="nav-title show">Установка</span><span class="nav-spacer"></span></div>
+      <div class="sheet-scroll"><div class="groups">
+        <div class="group"><div class="card pad steps">
+          <p><b>1.</b> Откройте этот сайт в Safari.</p>
+          <p><b>2.</b> Нажмите «Поделиться» внизу экрана.</p>
+          <p><b>3.</b> Выберите «На экран „Домой“» и нажмите «Добавить».</p>
+          <p><b>4.</b> Запускайте Readline с иконки — он откроется на весь экран, как обычное приложение.</p>
+        </div><p class="group-foot" id="install-state"></p></div>
+      </div></div>
+    </div>
+  </div>
+  <input type="file" id="file-import" accept=".json,application/json" hidden>
+</section>
+
+<!-- Шторка быстрых настроек на экране записи -->
+<section class="sheet compact dark-ui" id="sheet-controls">
+  <div class="grabber"></div>
+  <div class="sheet-nav"><span class="nav-spacer"></span><span class="nav-title show">Настройки суфлёра</span><button class="glass circle" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button></div>
+  <div class="sheet-scroll">
+    <div class="mode-cards" id="ctl-mode">
+      <button data-v="manual"><svg><use href="#i-gauge"/></svg>Ручной</button>
+      <button data-v="voice"><svg><use href="#i-wave"/></svg>Голос</button>
+      <button data-v="follow"><svg><use href="#i-follow"/></svg>Слежение</button>
+    </div>
+    <p class="ctl-hint" id="ctl-hint"></p>
+    <div class="card pad">
+      <div id="ctl-speed-wrap">
+        <div class="slider-row"><span>Скорость</span><b id="c-speed-v"></b></div>
+        <input type="range" class="ios-range" id="c-speed" min="10" max="200" step="5">
+        <div class="sdiv full"></div>
+      </div>
+      <div class="slider-row"><span>Размер текста</span><b id="c-font-v"></b></div>
+      <input type="range" class="ios-range" id="c-font" min="20" max="96" step="1">
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="srow"><svg><use href="#i-words"/></svg><span class="srow-text"><span>Язык речи</span></span>
+        <div class="segmented" id="c-lang"><button data-v="ru-RU">Рус</button><button data-v="en-US">Eng</button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Меню «⋯» -->
+<div id="menu" class="menu hidden"></div>
+<div id="toast" class="hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
